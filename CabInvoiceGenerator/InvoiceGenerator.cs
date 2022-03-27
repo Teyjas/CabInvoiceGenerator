@@ -30,7 +30,7 @@ public class InvoiceGenerator
 	/// </summary>
 	/// <returns>Aggregate fare of all the rides</returns>
 	/// <exception cref="InvoiceException"></exception>
-	public double CalculateFare(Ride[] rides)
+	public (int noOfRides, double totalFare, double averageFare) CalculateFare(Ride[] rides)
 	{
 		try
 		{
@@ -39,7 +39,7 @@ public class InvoiceGenerator
 			double totalFare = 0;
 			foreach (Ride ride in rides)
 				totalFare += CalculateFare(ride.Distance, ride.Time);
-			return totalFare;
+			return (rides.Length, totalFare, totalFare / rides.Length);
 		}
 		catch (ArgumentNullException)
 		{

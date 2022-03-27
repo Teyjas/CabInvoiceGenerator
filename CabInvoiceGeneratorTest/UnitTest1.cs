@@ -44,8 +44,8 @@ public class Tests
 	public void TestMultipleRides(double expected, Ride[] rides)
 	{
 		invoice = new InvoiceGenerator();
-		double fare = invoice.CalculateFare(rides);
-		Assert.AreEqual(expected, fare);
+		var result = invoice.CalculateFare(rides);
+		Assert.AreEqual(expected, result.totalFare);
 	}
 
 	[Test]
