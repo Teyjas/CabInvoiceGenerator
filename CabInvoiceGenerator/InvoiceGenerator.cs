@@ -2,16 +2,9 @@
 
 public class InvoiceGenerator
 {
-	private readonly double minFare;
-	private readonly double costPerDistance;
-	private readonly double costPerMinute;
-
-	public InvoiceGenerator()
-	{
-		minFare = 5;
-		costPerDistance = 10;
-		costPerMinute = 1;
-	}
+	private double minFare;
+	private double costPerDistance;
+	private double costPerMinute;
 
 	/// <summary>
 	/// Calculates Fare of a ride using given distance and time
@@ -19,18 +12,31 @@ public class InvoiceGenerator
 	/// <param name="distance">The distance traveled in the ride in KM</param>
 	/// <param name="time">The time traveled in minutes</param>
 	/// <returns>returns fare of the ride</returns>
-	public double CalculateFare(double distance, double time)
+	public double CalculateFare(double distance, double time, bool isPremium = false)
 	{
+		if (isPremium)
+		{
+			minFare = 20;
+			costPerDistance = 15;
+			costPerMinute = 2;
+		}
+		else
+		{
+			minFare = 5;
+			costPerDistance = 10;
+			costPerMinute = 1;
+		}
 		double totalFare = (distance * costPerDistance) + (time * costPerMinute);
 		return Math.Max(totalFare, minFare);
 	}
 
 	/// <summary>
-	/// Calculates Aggregate Fare of multiple ride using given set of rides
+	/// Calculates Aggregate and Average Fare of multiple ride using given set of rides
 	/// </summary>
-	/// <returns>Aggregate fare of all the rides</returns>
+	/// <param name="rides"></param>
+	/// <returns>returns a tuple (int, double, double)</returns>
 	/// <exception cref="InvoiceException"></exception>
-	public (int noOfRides, double totalFare, double averageFare) CalculateFare(Ride[] rides)
+	public Invoice CalculateFare(Ride[] rides)
 	{
 		try
 		{
@@ -38,8 +44,8 @@ public class InvoiceGenerator
 				throw new ArgumentNullException(nameof(rides));
 			double totalFare = 0;
 			foreach (Ride ride in rides)
-				totalFare += CalculateFare(ride.Distance, ride.Time);
-			return (rides.Length, totalFare, totalFare / rides.Length);
+				totalFare += CalculateFare(ride.Distance, ride.Time, ride.IsPremium);
+			return new Invoice(rides.Length, totalFare);
 		}
 		catch (ArgumentNullException)
 		{
